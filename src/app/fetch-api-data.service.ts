@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs/internal/operators';
+import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 
 //Declaring the api url that will provide data for the client app
-const apiUrl = 'YOUR_HOSTED_API_URL_HERE/';
+const apiUrl = 'https://my-flix-database-movie-app-5157085d44be.herokuapp.com/';
 @Injectable({
   providedIn: 'root'
 })
-export class UserRegistrationService {
+export class FetchApiDataService {
   // Inject the HttpClient module to the constructor params
   // This will provide HttpClient to the entire class, making it available via this.http
   constructor(private http: HttpClient) {
@@ -26,12 +25,12 @@ export class UserRegistrationService {
   // Making the api call for the user login endpoint
   public userLogin(userDetails: any): Observable<any> {
     console.log(userDetails);
-    return this.http.post(apiUrl + 'users', userDetails).pipe(
+    return this.http.post(apiUrl + 'login', userDetails).pipe(
     catchError(this.handleError)
     );
   }
 
-  // Making the api call for the Get All Movies endpoint
+  // Making the api call for the Get All Movies Endpoint
   getAllMovies(): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http.get(apiUrl + 'movies', {headers: new HttpHeaders(
@@ -77,6 +76,11 @@ export class UserRegistrationService {
       map(this.extractResponseData),
       catchError(this.handleError)
     );
+  }
+  // Non-typed response extraction
+  private extractResponseData(res: object): any {
+    const body = res;
+    return body || { };
   }
 
   // Making the api call for the Get User endpoint
