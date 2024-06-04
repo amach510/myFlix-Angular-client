@@ -1,40 +1,39 @@
-
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
-@use '@angular/material' as mat;
-// Plus imports for other components in your app.
-
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.core();
-
-// Define the theme object.
-$myFlix-Angular-client-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$azure-palette,
-    tertiary: mat.$blue-palette,
-  ),
-  density: (
-    scale: 0,
-  )
-));
-
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-:root {
-  @include mat.all-component-themes($myFlix-Angular-client-theme);
-}
+//@include mat.all-component-themes($myFlix-Angular-client-theme);
 
-// Comment out the line below if you want to use the pre-defined typography utility classes.
-// For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
-// @include mat.typography-hierarchy($theme);
+// Custom Theming for Angular Material
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
 
-// Comment out the line below if you want to use the deprecated `color` inputs.
-// @include mat.color-variants-backwards-compatibility($theme);
-/* You can add global styles to this file, and also import other style files */
+// Include the common styles for Angular Material. We include this here so that you only have to load a single css file for Angular Material in your app.
+@include mat.core();
 
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker hue.
+$myFlix-Angular-client-primary: mat.m2-define-palette(mat.$m2-light-blue-palette, 800);
+$myFlix-Angular-client-accent: mat.m2-define-palette(mat.$m2-grey-palette);
+
+
+// The warn palette is optional (defaults to red).
+$myFlix-Angular-client-warn: mat.m2-define-palette(mat.$m2-red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$myFlix-Angular-client-theme: mat.m2-define-dark-theme((
+  color: (
+    primary: $myFlix-Angular-client-primary,
+    accent: $myFlix-Angular-client-accent,
+    warn: $myFlix-Angular-client-warn,
+  ),
+));
+
+// Include theme styles for core and each component used in your app.
+@include mat.all-component-themes($myFlix-Angular-client-theme);
+
+/* add global styles to this file */
+html, body { height: 100%; background-color: #212121; color: #ffffff; font-size: 18px;}
+h1 { font-size: 5em;}
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,0 +1,17 @@
+.main-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.button-container {
+    font-size: 20px;
+    width: 30%;
+}
+.welcome-button{
+    width: 50%;
+    margin: 15px; 
+    padding: 25px; 
+    width: 20%;
+}
