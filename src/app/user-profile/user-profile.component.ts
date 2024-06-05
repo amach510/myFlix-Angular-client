@@ -59,6 +59,20 @@ export class UserProfileComponent implements OnInit{
       });
     });
   }
+  
+  // function to delete user profile
+  deleteUser(): void {
+    this.router.navigate(['welcome']).then(() => {
+      localStorage.clear();
+      this.snackBar.open('User successfully deleted.', 'OK', {
+        duration: 2000
+      });
+    })
+    this.fetchApiData.deleteUser(this.userData.username).subscribe((result) => {
+      console.log(result);
+    });
+  }
+  
   // function to format date to yyyy-MM-dd
   formatDate(dateString: string): string {
     const date = new Date(dateString);

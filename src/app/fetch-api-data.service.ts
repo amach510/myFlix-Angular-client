@@ -117,7 +117,7 @@ export class FetchApiDataService {
   // Making the api call for the Edit User endpoint
   editUser(userDetails: any): Observable<any> {
     const token = localStorage.getItem('token');
-    return this.http.put(apiUrl + 'users/' + userDetails.username, userDetails, {headers: new HttpHeaders(
+    return this.http.put(apiUrl + 'users/' + userDetails.Username, userDetails, {headers: new HttpHeaders(
       {
         Authorization: 'Bearer ' + token,
       })}).pipe(
@@ -126,17 +126,17 @@ export class FetchApiDataService {
     );
   }
 
-  // Making the api call for the Delete User endpoint
-  deleteUser(username: string): Observable<any> {
-    const token = localStorage.getItem('token');
-    return this.http.get(apiUrl + 'users/' + username, {headers: new HttpHeaders(
-      {
-        Authorization: 'Bearer ' + token,
-      })}).pipe(
-      map(this.extractResponseData),
-      catchError(this.handleError)
-    );
-  }
+// Making the api call for the Delete User endpoint
+deleteUser(username: string): Observable<any> {
+  const token = localStorage.getItem('token');
+  return this.http.delete(apiUrl + 'users/' + username, {headers: new HttpHeaders(
+    {
+      Authorization: 'Bearer ' + token,
+    })}).pipe(
+    map(this.extractResponseData),
+    catchError(this.handleError)
+  );
+}
 
   // Making the api call for the Delete a Movie to Favorite Movies endpoint
   deleteFavoriteMovies(username: string, movieID: string): Observable<any> {
