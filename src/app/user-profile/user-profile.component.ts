@@ -1,6 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { DirectorInfoComponent } from '../director-info/director-info.component';
+import { MovieSynopsisComponent } from '../movie-synopsis/movie-synopsis.component';
+import { GenreInfoComponent } from '../genre-info/genre-info.component';
 
 // Import to bring in the API call created in 6.2
 import { FetchApiDataService  } from '../fetch-api-data.service';
@@ -15,9 +18,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class UserProfileComponent implements OnInit{
 
-  @Input() userData = { username: "", password: "", email: "", birthday: "" };
+  @Input() userData = { username: "", password: "", email: "", birthday: "", favoriteMovies:[] };
 
   user: any = {};
+  movies: any[] = [];
+  favoriteMovies : any[] = [];
 
   constructor(
     public fetchApiData: FetchApiDataService,
@@ -28,17 +33,21 @@ export class UserProfileComponent implements OnInit{
 
   ngOnInit(): void {
     this.getProfile();
+    this.getFavMovies();
   }
 
-  // function for getting user
+  // Function for getting user
   getProfile(): void {
     this.user = this.fetchApiData.getUser();
     this.userData.username = this.user.username;
     this.userData.password = '';
     this.userData.email = this.user.email;
     this.userData.birthday = this.formatDate(this.user.birthday);
+    this.fetchApiData.getAllMovies().subscribe((response) => {
+      this.favoriteMovies = response.filter((movie: any) => this.user.favoriteMovies.includes(movie._id));
+    });
   }
-  // function for updating user info
+  // Function for updating user info
   updateUser(): void {
     if (!this.userData.password) {
       this.snackBar.open('Password is required', 'OK', {
@@ -60,7 +69,7 @@ export class UserProfileComponent implements OnInit{
     });
   }
   
-  // function to delete user profile
+  // Function to delete user profile
   deleteUser(): void {
     this.router.navigate(['welcome']).then(() => {
       localStorage.clear();
@@ -73,7 +82,7 @@ export class UserProfileComponent implements OnInit{
     });
   }
   
-  // function to format date to yyyy-MM-dd
+  // Function to format date
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     const year = date.getUTCFullYear();
@@ -81,4 +90,81 @@ export class UserProfileComponent implements OnInit{
     const day = ('0' + date.getUTCDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
+
+  // Function for getting all movies
+  getMovies(): void {
+    this.fetchApiData.getAllMovies().subscribe((resp: any) => {
+      this.movies = resp;
+      console.log(this.movies);
+      return this.movies;
+    });
+  }
+
+  // Function that will open the dialog when director button is clicked
+  openDirectorDialog(name: string, bio: string, birth: string, death: string): void {
+    this.dialog.open(DirectorInfoComponent, {
+      data: {
+        Name: name,
+        Bio: bio,
+        Birth: birth,
+        Death: death
+      },
+      width: '450px',
+    });
+  }
+
+  // Function that will open the dialog when genre button is clicked
+  openGenreDialog(name: string, description: string): void {
+    this.dialog.open(GenreInfoComponent, {
+      data: {
+        Name: name,
+        Description: description,
+      },
+      width: '450px',
+    });
+  }
+
+  // Function that will open the dialog when synopsis button is clicked
+  openSynopsisDialog(description: string): void {
+    this.dialog.open(MovieSynopsisComponent, {
+      data: {
+        Description: description,
+      },
+      width: '450px',
+    });
+  }
+
+  // Function to get favMovie list
+  getFavMovies(): void {
+  this.user = this.fetchApiData.getUser();
+  this.userData.favoriteMovies = this.user.favoriteMovies;
+  this.favoriteMovies = this.user.favoriteMovies;
+  console.log('Fav Movies in getFavMovie', this.favoriteMovies);
+  }
+
+  // Function to check if movie is favMovie
+  isFav(movie: any): any {
+  const MovieID = movie._id;
+  if (this.favoriteMovies.some((movie) => movie === MovieID)) {
+    return true;
+  } else {
+    return false;
+  }
+  }
+
+  // Function to delete movie from favMovie list
+  deleteFavMovies(movie: any): void {
+  this.user = this.fetchApiData.getUser();
+  this.userData.username = this.user.username;
+  this.fetchApiData.deleteFavoriteMovies(movie).subscribe((result) => {
+    localStorage.setItem('user', JSON.stringify(result));
+    this.getFavMovies();
+    this. getProfile();
+    this.snackBar.open('Movie has been deleted from your favorites!', 'OK', {
+      duration: 3000,
+    });
+  });
+  }
 }
+
+
