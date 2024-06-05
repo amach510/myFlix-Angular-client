@@ -21,6 +21,9 @@ import { MovieCardComponent } from './movie-card/movie-card.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { GenreInfoComponent } from './genre-info/genre-info.component';
+import { DirectorInfoComponent } from './director-info/director-info.component';
+import { MovieSynopsisComponent } from './movie-synopsis/movie-synopsis.component';
 
 const appRoutes: Routes = [
   { path: 'welcome', component: WelcomePageComponent },
@@ -38,7 +41,10 @@ const appRoutes: Routes = [
     WelcomePageComponent,
     UserProfileComponent,
     NavbarComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    GenreInfoComponent,
+    DirectorInfoComponent,
+    MovieSynopsisComponent
   ],
   imports: [
     BrowserModule,
