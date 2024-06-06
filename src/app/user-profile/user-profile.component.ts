@@ -11,6 +11,12 @@ import { FetchApiDataService  } from '../fetch-api-data.service';
 // Import to display notifications back to the user
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+/**
+ * @description Component representing the user profile page.
+ * @selector 'app-user-profile'
+ * @templateUrl './user-profile.component.html'
+ * @styleUrls ['./user-profile.component.scss']
+ */
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -24,6 +30,13 @@ export class UserProfileComponent implements OnInit{
   movies: any[] = [];
   favoriteMovies : any[] = [];
 
+  /**
+   * @constructor - Constructor for UserProfileComponent.
+   * @param {FetchApiDataService} fetchApiData - Service for fetching data from the API.
+   * @param {MatSnackBar} snackBar - Material snack bar service for displaying notifications.
+   * @param {Router} router - Router service for navigation.
+   * @param {MatDialog} dialog - Material dialog service for opening dialogs.
+   */
   constructor(
     public fetchApiData: FetchApiDataService,
     public snackBar: MatSnackBar,
@@ -36,7 +49,10 @@ export class UserProfileComponent implements OnInit{
     this.getFavMovies();
   }
 
-  // Function for getting user
+  /**
+   * Function for getting user.
+   * @returns user's username, email, birthday, and favorite movies.
+   */
   getProfile(): void {
     this.user = this.fetchApiData.getUser();
     this.userData.username = this.user.username;
@@ -47,7 +63,11 @@ export class UserProfileComponent implements OnInit{
       this.favoriteMovies = response.filter((movie: any) => this.user.favoriteMovies.includes(movie._id));
     });
   }
-  // Function for updating user info
+  
+  /**
+   * Function for updating user information.
+   * @returns Message "User update successful" / "Password is required" (per validation rule in api that requires password to be entered to confirm updates) / "Failed to update user".
+   */
   updateUser(): void {
     if (!this.userData.password) {
       this.snackBar.open('Password is required', 'OK', {
@@ -69,7 +89,10 @@ export class UserProfileComponent implements OnInit{
     });
   }
   
-  // Function to delete user profile
+  /**
+   * Function to delete user profile.
+   * @returns Message "User successfully deleted."
+   */
   deleteUser(): void {
     this.router.navigate(['welcome']).then(() => {
       localStorage.clear();
@@ -82,7 +105,11 @@ export class UserProfileComponent implements OnInit{
     });
   }
   
-  // Function to format date
+  /**
+   * Function to format a date string into 'YYYY-MM-DD' format.
+   * @param {string} dateString - The date string to be formatted.
+   * @returns {string} - The formatted date string in 'YYYY-MM-DD' format.
+   */
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     const year = date.getUTCFullYear();
@@ -91,7 +118,10 @@ export class UserProfileComponent implements OnInit{
     return `${year}-${month}-${day}`;
   }
 
-  // Function for getting all movies
+  /**
+   * Function for getting all movies.
+   * @returns All movies.
+   */
   getMovies(): void {
     this.fetchApiData.getAllMovies().subscribe((resp: any) => {
       this.movies = resp;
@@ -100,7 +130,14 @@ export class UserProfileComponent implements OnInit{
     });
   }
 
-  // Function that will open the dialog when director button is clicked
+  /**
+   * Function that will open the dialog when director button is clicked.
+   * @param {string} name - Name of the director.
+   * @param {string} bio - Biography of the director.
+   * @param {string} birth - Birth date of the director.
+   * @param {string} death - Death date of the director.
+   * @returns Directors name, bio, birth date and death date.
+   */
   openDirectorDialog(name: string, bio: string, birth: string, death: string): void {
     this.dialog.open(DirectorInfoComponent, {
       data: {
@@ -113,7 +150,12 @@ export class UserProfileComponent implements OnInit{
     });
   }
 
-  // Function that will open the dialog when genre button is clicked
+  /**
+   * Function that will open the dialog when genre button is clicked.
+   * @param {string} name - Name of the genre.
+   * @param {string} description - Description of the genre.
+   * @returns Genre name and discription.
+   */
   openGenreDialog(name: string, description: string): void {
     this.dialog.open(GenreInfoComponent, {
       data: {
@@ -124,7 +166,11 @@ export class UserProfileComponent implements OnInit{
     });
   }
 
-  // Function that will open the dialog when synopsis button is clicked
+  /**
+   * Function that will open the dialog when synopsis button is clicked
+   * @param {string} description - Description of the movie.
+   * @returns Description of the movie.
+   */
   openSynopsisDialog(description: string): void {
     this.dialog.open(MovieSynopsisComponent, {
       data: {
@@ -134,7 +180,10 @@ export class UserProfileComponent implements OnInit{
     });
   }
 
-  // Function to get favMovie list
+  /**
+   * Function to get favMovie list.
+   * @returns Favorite movies of user.
+  */
   getFavMovies(): void {
   this.user = this.fetchApiData.getUser();
   this.userData.favoriteMovies = this.user.favoriteMovies;
@@ -142,7 +191,11 @@ export class UserProfileComponent implements OnInit{
   console.log('Fav Movies in getFavMovie', this.favoriteMovies);
   }
 
-  // Function to check if movie is favMovie
+  /**
+   * Function to check if movie is a favorite movie.
+   * @param movie  - Movie object to check.
+   * @returns {boolean} - Boolean indicating whether the movie is a favorite.
+   */
   isFav(movie: any): any {
   const MovieID = movie._id;
   if (this.favoriteMovies.some((movie) => movie === MovieID)) {
@@ -152,7 +205,11 @@ export class UserProfileComponent implements OnInit{
   }
   }
 
-  // Function to delete movie from favMovie list
+  /**
+   * Function to delete movie from favMovie list.
+   * @param {any} movie - Movie to delete from favorite movies.
+   * @returns Message "Movie has been deleted from your favorites!"
+   */
   deleteFavMovies(movie: any): void {
   this.user = this.fetchApiData.getUser();
   this.userData.username = this.user.username;
