@@ -1,5 +1,6 @@
 {
     // Comments are supported, like tsconfig.json
-    "entryPoints": ["src/main.ts"],
+    "entryPoints": ["src/app"],
+    "entryPointStrategy": "expand",
     "out": "docs"
 }
